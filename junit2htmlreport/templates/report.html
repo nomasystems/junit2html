@@ -23,6 +23,13 @@
                 {% endfor %}
                 {{tests | sum}}
             </span> failures</h2>
+            <h2 id="blocked-count"><span class="number">
+                {% set tests = [] %}
+                {% for suite in report %}
+                    {%if tests.append(suite.blocked() | length) %}{% endif %}
+                {% endfor %}
+                {{tests | sum}}
+            </span> blocked </h2>
             <h2 id="aborted-count"><span class="number">
                 {% set tests = [] %}
                 {% for suite in report %}
@@ -35,6 +42,7 @@
         <section id="segment-bar">
             <a id="all-segment" onclick="selectSegment(this);" class="selected">All</a>
             <a id="failing-segment" onclick="selectSegment(this);">Failing</a>
+            <a id="blocking-segment" onclick="selectSegment(this);">Blocking</a>
             <a id="aborting-segment" onclick="selectSegment(this);">Aborting</a>
             <a id="passing-segment" onclick="selectSegment(this);">Passing</a>
         </section>
@@ -47,6 +55,8 @@
         <div class="testsuite testsuite-failed">
         {% elif suite.isAborted() %}
         <div class="testsuite testsuite-aborted">
+        {% elif suite.blocked() %}
+        <div class="testsuite testsuite-blocked">
         {% else %}
         <div class="testsuite testsuite-passed">
         {% endif %}
@@ -69,6 +79,8 @@
                     <div class="testsuite-results-failed">
                     {% elif suite.isAborted() %}
                     <div class="testsuite-results-aborted">
+                    {% elif suite.blocked() %}
+                    <div class="testsuite-results-blocked">
                     {% else %}
                     <div class="testsuite-results-passed">
                     {% endif %}
@@ -81,6 +93,9 @@
                             </tr>
                             <tr>
                                 <th>Failures</th><td>{{suite.failed()| length}}</td>
+                            </tr>
+                            <tr>
+                                <th>Blocked</th><td>{{suite.blocked()| length}}</td>
                             </tr>
                             <tr>
                                 <th>Aborted</th><td>{{suite.aborted()| length}}</td>
@@ -96,6 +111,8 @@
                     <div class="testclass testclass-failed">
                     {% elif suite.classes[classname].isAborted() %}
                     <div class="testclass testclass-aborted">
+                    {% elif suite.classes[classname].blocked() %}
+                    <div class="testclass testclass-blocked">
                     {% else %}
                     <div class="testclass testclass-passed">
                     {% endif %}
@@ -120,6 +137,10 @@
                                             <tr><td colspan="2">Aborted </td></tr>
                                             {% endif %}
 
+                                            {% if test.blocked %}
+                                            <tr><td colspan="2">Blocked by {{test.blocked_issue|safe}}</td></tr>
+                                            {% endif %}
+
                                             {% if test.failed() %}
                                             <tr><td colspan="2"><pre>{{test.failure}}</pre> </td></tr>
                                             {% endif %}
@@ -130,6 +151,10 @@
 
                                             {% if test.aborted %}
                                             <tr><td colspan="2"><pre class="pre-aborted">{{test.aborted}}</pre> </td></tr>
+                                            {% endif %}
+
+                                            {% if test.blocked %}
+                                            <tr><td colspan="2"><pre>{{test.blocked}}</pre> </td></tr>
                                             {% endif %}
 
                                             {% if test.properties %}

@@ -76,6 +76,10 @@ header:after { clear:both;}
     border-color: black;
 }
 
+.testsuite-results-blocked .proplist {
+    border-color: #F6AA45;
+}
+
 .testresults > div {
     padding-left: 1em;
 }
@@ -103,6 +107,11 @@ header:after { clear:both;}
     color: white;
 }
 
+.testclass-blocked > section.header {
+    border-color: #F6AA45;
+    background-color: #F6AA45;
+}
+
 .testsuite-results-passed .proplist th {
     background-color: #CAF59F;
 }
@@ -114,6 +123,10 @@ header:after { clear:both;}
 .testsuite-results-aborted .proplist th {
     background-color: black;
     color: white;
+}
+
+.testsuite-results-blocked .proplist th {
+    background-color: #F6AA45;
 }
 
 .testsuite-passed > section.testsuite-header {
@@ -128,6 +141,11 @@ header:after { clear:both;}
 
 .testsuite-aborted > section.testsuite-header {
     border-left: 1em solid black;
+    padding-left: 1em;
+}
+
+.testsuite-blocked > section.testsuite-header {
+    border-left: 1em solid #F6AA45;
     padding-left: 1em;
 }
 
@@ -218,6 +236,11 @@ header:after { clear:both;}
     background-color: #000000;
     border-color: #000000;
     color: silver;
+}
+
+.outcome-blocked {
+    background-color: #F6AA45;
+    border-color: #F6AA45;
 }
 
 .stats-table {
@@ -377,6 +400,11 @@ th.test-proplist-name {
 
 #aborted-count {
     color: #000000;
+    margin-left:10px;
+}
+
+#blocked-count {
+    color: #F6AA45;
     margin-left:10px;
 }
 

@@ -15,6 +15,7 @@ from datetime import datetime
 NO_CLASSNAME = "no-testclass"
 
 ABORTED = "aborted"  # the test was aborted
+BLOCKED = "blocked"  # the test was blocked
 FAILED = "failed"  # the test failed
 SKIPPED = "skipped"  # the test was skipped
 PASSED = "passed"  # the test completed successfully
@@ -109,6 +110,9 @@ class Class(AnchorBase):
     def aborted(self):
         return [test for test in self.cases if test.aborted]
 
+    def blocked(self):
+        return [test for test in self.cases if test.blocked]
+
     def isAborted(self):
         return all(test.aborted for test in self.cases)
 
@@ -146,6 +150,9 @@ class Case(AnchorBase, ToJunitXmlBase):
         self.skipped_msg = None
         self.aborted = False
         self.aborted_msg = None
+        self.blocked = False
+        self.blocked_msg = None
+        self.blocked_issue = None
         self.stderr = None
         self.stdout = None
         self.duration = 0
@@ -162,6 +169,8 @@ class Case(AnchorBase, ToJunitXmlBase):
             return SKIPPED
         elif self.aborted:
             return ABORTED
+        elif self.blocked:
+            return BLOCKED
         elif self.failed():
             return FAILED
         return PASSED
@@ -170,6 +179,8 @@ class Case(AnchorBase, ToJunitXmlBase):
         if self.skipped:
             return "[S]"
         if self.aborted:
+            return "[A]"
+        if self.blocked:
             return "[B]"
         if self.failed():
             return "[F]"
@@ -210,6 +221,13 @@ class Case(AnchorBase, ToJunitXmlBase):
                 "aborted", self.aborted,
                 {
                     "message": self.aborted_msg
+                }))
+
+        if self.blocked:
+            testcase.append(self.make_element(
+                "blocked", self.blocked,
+                {
+                    "message": self.blocked_msg
                 }))
 
         if self.properties:
@@ -333,9 +351,16 @@ class Suite(AnchorBase, ToJunitXmlBase):
         """
         return [test for test in self.all() if test.aborted]
 
+    def blocked(self):
+        """
+        Return all blocked testcases
+        :return:
+        """
+        return [test for test in self.all() if test.blocked]
+
     def isAborted(self):
         """
-        Return all aborted testcases
+        Return if all testcases are aborted
         :return:
         """
         return all(test.aborted for test in self.all())
@@ -345,7 +370,7 @@ class Suite(AnchorBase, ToJunitXmlBase):
         Return all the passing testcases
         :return:
         """
-        return [test for test in self.all() if not test.failed() and not test.skipped() and not test.aborted()]
+        return [test for test in self.all() if not test.failed() and not test.skipped() and not test.aborted() and not test.blocked()]
 
 
 class Junit(object):
@@ -485,6 +510,14 @@ class Junit(object):
                                 newcase.aborted_msg = child.attrib["message"]
                             if not newcase.aborted:
                                newcase.aborted = "aborted"
+                        if child.tag == "blocked":
+                            newcase.blocked = child.text
+                            if clean_xml_attribute(child, "block") is not None:
+                                newcase.blocked_issue = "<a target=_blank href=" + (clean_xml_attribute(child, "block_link") or '') + ">" + clean_xml_attribute(child, "block") + "</a>"
+                            if "message" in child.attrib:
+                                newcase.blocked_msg = child.attrib["message"]
+                            if not newcase.blocked:
+                               newcase.blocked = "blocked"
                         elif child.tag == "system-out":
                             newcase.stdout = child.text
                         elif child.tag == "system-err":
