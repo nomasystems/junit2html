@@ -28,39 +28,66 @@ select(segment);
         showAll(document.querySelectorAll('.testsuite'));
     } else if (segment.id == "failing-segment") {
         hideAll(document.querySelectorAll('.outcome-aborted'));
+        hideAll(document.querySelectorAll('.outcome-blocked'));
         hideAll(document.querySelectorAll('.outcome-passed'));
         showAll(document.querySelectorAll('.outcome-failed'));
         hideAll(document.querySelectorAll('.testclass-aborted'));
+        hideAll(document.querySelectorAll('.testclass-blocked'));
         hideAll(document.querySelectorAll('.testclass-passed'));
         showAll(document.querySelectorAll('.testclass-failed'));
         hideAll(document.querySelectorAll('.testsuite-passed'));
         hideAll(document.querySelectorAll('.testsuite-aborted'));
+        hideAll(document.querySelectorAll('.testsuite-blocked'));
         showAll(document.querySelectorAll('.testsuite-failed'));
     } else if (segment.id == "passing-segment") {
         hideAll(document.querySelectorAll('.outcome-aborted'));
+        hideAll(document.querySelectorAll('.outcome-blocked'));
         hideAll(document.querySelectorAll('.outcome-failed'));
         showAll(document.querySelectorAll('.outcome-passed'));
         hideAll(document.querySelectorAll('.testclass-aborted'));
         hideAll(document.querySelectorAll('.testclass-failed:not(:has(.outcome-passed))'));
+        hideAll(document.querySelectorAll('.testclass-blocked:not(:has(.outcome-passed))'));
         showAll(document.querySelectorAll('.testclass-passed'));
         hideAll(document.querySelectorAll('.testsuite-aborted'));
-        hideAll(document.querySelectorAll('.testsuite-failed:not(:has(.outcome-passed))'));
+        hideAll(document.querySelectorAll('.testsuite-failed:not(:has(.testclass-passed .outcome-passed)):not(:has(.testclass-failed .outcome-passed))'));
+        hideAll(document.querySelectorAll('.testsuite-blocked:not(:has(.testclass-passed .outcome-passed)):not(:has(.testclass-blocked .outcome-passed))'));
         showAll(document.querySelectorAll('.testsuite-passed'));
     } else if (segment.id == "aborting-segment") {
         showAll(document.querySelectorAll('.outcome-aborted'));
         hideAll(document.querySelectorAll('.outcome-failed'));
         hideAll(document.querySelectorAll('.outcome-passed'));
         showAll(document.querySelectorAll('.testclass-aborted'));
+        hideAll(document.querySelectorAll('.testclass-blocked:not(:has(.outcome-aborted))'));
         hideAll(document.querySelectorAll('.testclass-failed:not(:has(.outcome-aborted))'));
         hideAll(document.querySelectorAll('.testclass-passed:not(:has(.outcome-aborted))'));
         showAll(document.querySelectorAll('.testclass-passed .outcome-aborted'));
         showAll(document.querySelectorAll('.testclass-failed .outcome-aborted'));
+        showAll(document.querySelectorAll('.testclass-blocked .outcome-aborted'));
         showAll(document.querySelectorAll('.testsuite-aborted'));
         hideAll(document.querySelectorAll('.testsuite-failed:not(:has(.testclass-failed .outcome-aborted)):not(:has(.testclass-passed .outcome-aborted)):not(:has(.testclass-aborted .outcome-aborted))'));
+        hideAll(document.querySelectorAll('.testsuite-blocked:not(:has(.testclass-blocked .outcome-aborted)):not(:has(.testclass-passed .outcome-aborted)):not(:has(.testclass-aborted .outcome-aborted))'));
         hideAll(document.querySelectorAll('.testsuite-passed:not(:has(.testclass-passed .outcome-aborted)):not(:has(.testclass-aborted .outcome-aborted))'));
         showAll(document.querySelectorAll('.testsuite-passed .testclass-passed .outcome-aborted))'));
         showAll(document.querySelectorAll('.testsuite-passed .testclass-aborted))'));
         showAll(document.querySelectorAll('.testsuite-failed .testclass-failed .outcome-aborted))'));
         showAll(document.querySelectorAll('.testsuite-failed .testclass-aborted))'));
+        showAll(document.querySelectorAll('.testsuite-blocked .testclass-blocked .outcome-aborted))'));
+        showAll(document.querySelectorAll('.testsuite-blocked .testclass-aborted))'));
+    } else if (segment.id == "blocking-segment") {
+        showAll(document.querySelectorAll('.outcome-blocked'));
+        hideAll(document.querySelectorAll('.outcome-aborted'));
+        hideAll(document.querySelectorAll('.outcome-failed'));
+        hideAll(document.querySelectorAll('.outcome-passed'));
+        showAll(document.querySelectorAll('.testclass-blocked'));
+        hideAll(document.querySelectorAll('.testclass-aborted'));
+        hideAll(document.querySelectorAll('.testclass-passed'));
+        hideAll(document.querySelectorAll('.testclass-failed:not(:has(.outcome-blocked))'));
+        showAll(document.querySelectorAll('.testclass-failed .outcome-blocked'));
+        showAll(document.querySelectorAll('.testsuite-blocked'));
+        hideAll(document.querySelectorAll('.testsuite-aborted'));
+        hideAll(document.querySelectorAll('.testsuite-passed'));
+        hideAll(document.querySelectorAll('.testsuite-failed:not(:has(.testclass-failed .outcome-blocked)):not(:has(.testclass-passed .outcome-blocked)):not(:has(.testclass-blocked .outcome-blocked))'));
+        showAll(document.querySelectorAll('.testsuite-failed .testclass-failed .outcome-blocked))'));
+        showAll(document.querySelectorAll('.testsuite-failed .testclass-blocked))'));
     }
 }
