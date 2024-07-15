@@ -447,10 +447,10 @@ class Junit(object):
                 dt = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%fZ')
                 formatted_timestamp = dt.strftime('%d-%m-%Y %H:%M:%S')
                 cursuite.properties.append({"name": "Time", "value": formatted_timestamp})
-            if clean_xml_attribute(suite, "device_1") is not None or clean_xml_attribute(suite, "device") is not None:
-                cursuite.properties.append({"name": "Device 1", "value": "<a target=_blank href=" + (clean_xml_attribute(suite, "link_1") or clean_xml_attribute(suite, "link") or '') + ">" + (clean_xml_attribute(suite, "device_1") or clean_xml_attribute(suite, "device")) + "</a>"})
-            if clean_xml_attribute(suite, "device_2") is not None:
-                cursuite.properties.append({"name": "Device 2", "value": "<a target=_blank href=" + (clean_xml_attribute(suite, "link_2") or '') + ">" + clean_xml_attribute(suite, "device_2") + "</a>"})
+            attempts = 1
+            while clean_xml_attribute(suite, "device_%s" % attempts) is not None:
+                cursuite.properties.append({"name": "Device %s" % attempts, "value": "<a target=_blank href=" + (clean_xml_attribute(suite, "link_%s" % attempts) or '') + ">" + clean_xml_attribute(suite, "device_%s" % attempts) + "</a>"})
+                attempts += 1
 
             cursuite.duration = float(suite.attrib.get("time", '0').replace(',', '') or '0')
 
